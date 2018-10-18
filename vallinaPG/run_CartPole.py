@@ -8,7 +8,7 @@ import pickle
 rewards = [[],[]]
 GAMMA = 0.99
 
-DISPLAY_REWARD_THRESHOLD = 4000  # renders environment if total episode reward is greater then this threshold
+DISPLAY_REWARD_THRESHOLD = 500  # renders environment if total episode reward is greater then this threshold
 RENDER = False  # rendering wastes time
 
 env = gym.make('CartPole-v0')
@@ -38,7 +38,7 @@ RL = Actor(
 
 )
 
-for i_episode in range(200):
+for i_episode in range(1000):
 
     observation = env.reset()
 
