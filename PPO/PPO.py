@@ -62,37 +62,16 @@ class Critor(object):
 		self.loss = None
 		self.name = name
 
-	def calculate_loss(self,ep_obs,ep_rs,ep_gs,back_prop=True):
-		#calculate loss on ONE episode
-		#assert type(ep_obs) == torch.Tensor, 'ep_obs of net %s is not Tensor!'%(self.net.name)
-		#assert type(ep_rs) == torch.Tensor, 'ep_rs of net %s is not Tensor!'%(self.net.name)
+	def calculate_loss(self,ep_obs,ep_gs,back_prop=True):
+		# calculate loss on ONE episode
+		# ep_gs can be viewed as target/label
 		ep_obs=checkAndConvert(ep_obs,self.name+' ep_obs')
-		ep_rs=checkAndConvert(ep_rs,self.name+' ep_rs')
 		ep_gs=checkAndConvert(ep_gs,self.name+' ep_gs')
-		# ep_obs: (T,n_features); ep_rs: (T,); predict: (T,)
+		# ep_obs: (T,n_features); ep_gs: (T,); predicted: (T,)
 		predicted = self.net(ep_obs)
-		next_state = [ep_gs[i] for i in range(1,len(ep_gs))]
-		next_state.append(0)
-		next_state = torch.Tensor(np.array(next_state)).view(-1,1)
-		# predicted: [r1,r2,r3...,rt]
-		# next_stat: [g2,g3,g4...,0]
-		target = ep_rs + GAMMA * next_state
-		loss = self.loss_func(predicted,target)
+		loss = self.loss_func(predicted,ep_gs)
 		if back_prop:
 			loss.backward()
-		'''
-		# for debug
-		print('ep_obs\n',ep_obs)
-		print('ep_rs\n',ep_rs)
-		print('ep_gs\n',ep_gs)
-		print('predicted\n',predicted)
-		print('next_state\n',next_state)
-		print('target\n',target)
-		print('loss\n',loss)
-		print('grad\n')
-		for para in self.net.parameters():
-			print(para.grad)
-		'''
 		return loss
 
 	def update(self):
@@ -175,12 +154,19 @@ class PPO(object):
 		self.actor = Actor(n_features,n_actions,name='_actor_1',learning_rate=a_lr)
 		self.critor = Critor(n_features,name='_critor_1',learning_rate=c_lr)
 
-	def update(self,ep_obs,ep_as,ep_rs):
-		# preprocess to calculate discounted reawrds
-		# last one of ep_rs
-		for i in range
-		# update critor
-		state_values = critor.give_score(ep_obs)
+	def update_critor(self,ep_gs,ep_obs,train_iter):
+		for i in range(train_iter):
+			loss = self.critor.calculate_loss(ep_obs,ep_gs,back_prop=True)
+			self.critor.update()
+
+	def update_actor(self,ep_obs,ep_gs,ep_as,state_values,train_iter):
+		for i in range(train_iter):
+			loss = self.actor.calculate_loss(ep_obs,ep_gs,ep_as,state_values,back_prop=True)
+			self.actor.update()
+
+	def renew_actor(self):
+		self.actor.renew_old_para()
+		
 
 
 
@@ -196,3 +182,73 @@ print(a.choose_action([1,0,0,0]))
 c = Critor(4,'critor',0.001)
 c.calculate_loss(ep_obs=[[0,0,0,1],[0,1,0,0]],ep_gs=[[2],[1]],ep_rs=[[1],[1]])
 '''
+
+if __name__ == '__main__':
+
+	RENDER = False
+	env = gym.make('CartPole-v0')
+	env.seed(1)     # reproducible, general Policy gradient has high variance
+	env = env.unwrapped
+	agent = PPO(n_actions=env.action_space.n,n_features=env.observation_space.shape[0],
+    			a_lr=0.001,c_lr=0.001,name='PPO_agent')
+
+
+	for i_episode in range(MAX_EPISODES):
+
+		epr = 0
+		obs = env.reset()
+
+		buffer_obs,buffer_as,buffer_rs,buffer_gs = [],[],[],[]
+
+		for step in range(MAX_STEPS):
+
+			if RENDER: env.render()
+			act = agent.choose_action()
+			buffer_obs.append(obs)
+			buffer_as.append(act)
+			obs,r,done,info = env.step(act)
+			epr+=r
+			buffer_rs.append(r)
+
+			if step%BATCH == 0 or step==MAX_STEPS-1:
+				gs = agent.get_v(obs)
+				for r in reversed(buffer_rs):
+					gs = r + GAMMA * gs
+					buffer_gs.append(gs)
+				buffer_gs = reversed(buffer_gs)
+				# baseline, predicted by critor
+				state_values = agent.critor.give_score(buffer_obs)
+				# renew two nets
+				agent.update_actor(buffer_obs,buffer_gs,buffer_as,state_values,train_iter=TRAIN_ITER)
+				agent.update_critor(buffer_gs,buffer_obs,train_iter=TRAIN_ITER)
+				agent.renew_actor()
+
+				buffer_obs,buffer_as,buffer_rs,buffer_gs = [],[],[],[]
+
+
+
+
+
+
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
