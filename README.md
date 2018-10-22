@@ -17,5 +17,5 @@
 - Use ```MAX_STEPS``` to control the length of episode you want to play (2000 by default)
 - Note that there is an upper bound rewards due to ```MAX_STEPS```
 - Next thing to be done: extend this algorithm to
-  - 1. Multi-process/thread
-  - 2. Continuous action selection model
+  -1. Multi-process/thread
+  -2. Continuous action selection model
