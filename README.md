@@ -14,5 +14,8 @@
 - use clipped surrogate objective
 - baseline given by state value approximated by critor
 - based on [this paper](https://arxiv.org/abs/1707.06347) 
-- Use MAX_STEPS to control the length of episode you want to play (2000 by default)
-- Note that there is an upper bound of total rewards according to each MAX_STEPS
+- Use ```MAX_STEPS``` to control the length of episode you want to play (2000 by default)
+- Note that there is an upper bound rewards due to ```MAX_STEPS```
+- Next step: extend this algorithm to
+  - Multi-process/thread
+  - Continuous action selection model
