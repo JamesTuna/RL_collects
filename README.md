@@ -13,5 +13,9 @@
 ### PPO
 - use clipped surrogate objective
 - baseline given by state value approximated by critor
-- PPO class to be implemented
 - based on [this paper](https://arxiv.org/abs/1707.06347) 
+- Use ```MAX_STEPS``` to control the length of episode you want to play (2000 by default)
+- Note that there exists an upper bound of total rewards due to ```MAX_STEPS```
+- Next thing to be done: extend this algorithm to
+  - Multi-process/thread (multi-actor, single critor; less correlation between experiences)
+  - Continuous action selection model
