@@ -4,16 +4,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import gym as gym
+import matplotlib.pyplot as plt
 
 
-epsilon = 0.2
+epsilon = 0.1
 GAMMA = 0.99
 BATCH = 32
-MAX_STEPS = 2000
-MAX_EPISODES = 2000
-ACTOR_ITER = 100
-CRITOR_ITER = 1
-A_LR = 0.0001
+MAX_STEPS = 5000
+MAX_EPISODES = 500
+ACTOR_ITER = 10
+CRITOR_ITER = 2
+A_LR = 0.001
 C_LR = 0.1
 
 def checkAndConvert(x,msg):
@@ -103,8 +104,9 @@ class Actor(object):
 		observation = checkAndConvert(observation,self.net.name+' choose action').view(1,-1)
 		prob = self.net(observation).data.numpy().reshape(-1)
 		#print('last_layer:\n',self.net.last_layer)
-		#print(prob)
-		return np.random.choice(range(len(prob)),p=prob)
+		act = np.random.choice(range(len(prob)),p=prob)
+		# print(prob,act)
+		return act
 
 	def calculate_loss(self,ep_obs,ep_gs,ep_as,state_values,back_prop=True):
 		# calculate loss on ONE trajectory
@@ -116,22 +118,34 @@ class Actor(object):
 		state_values = checkAndConvert(state_values,self.net.name+' calculate_loss state_values').view(-1,1)
 
 		advantage = ep_gs - state_values
+		#advantage = (advantage-advantage.mean())/advantage.std()
 
 		old_probs = self.old_net(ep_obs).detach() # [T,n_actions]
 		new_probs = self.net(ep_obs) # [T,n_actions]
 
-		#print('updated new probability\n',new_probs[0])
-
+		'''
+		# following code results in nan
 		ratio = new_probs/old_probs
+		#ratio = torch.exp(new_probs-old_probs)
 		# select probability of actions according to trajectory
 		selected_ratio = ratio.gather(1,ep_as.view(-1,1))
 		# clipped the ratio
 		clipped_ratio = torch.clamp(selected_ratio,1-epsilon,1+epsilon)
-		
+		'''
+
+
+		##################### new ############################
+		old_probs = old_probs.gather(1,ep_as.view(-1,1))
+		new_probs = new_probs.gather(1,ep_as.view(-1,1))
+		selected_ratio = new_probs/old_probs
+		clipped_ratio = torch.clamp(selected_ratio,1-epsilon,1+epsilon)
+		#######################################################
+
+
 		clipped_weighted_advan = clipped_ratio * advantage
 		original_weighted_advan = selected_ratio * advantage
 		final_weighted_advan = torch.min(clipped_weighted_advan,original_weighted_advan)
-		loss = -torch.sum(final_weighted_advan)
+		loss = -torch.mean(final_weighted_advan)
 		#print(loss)
 		if back_prop:
 			loss.backward()
@@ -174,17 +188,17 @@ class PPO(object):
 		return self.actor.choose_action(obs)
 
 	def update_critor(self,ep_gs,ep_obs,train_iter):
-		#print('critor update...')
 		for i in range(train_iter):
 			#print(i,' round of optimization')
 			loss = self.critor.calculate_loss(ep_obs,ep_gs,back_prop=True)
+			#print(loss)
 			self.critor.update()
 
 	def update_actor(self,ep_obs,ep_gs,ep_as,state_values,train_iter):
-		#print('actor update...')
 		for i in range(train_iter):
 			#print(i,' round of optimization')
 			loss = self.actor.calculate_loss(ep_obs,ep_gs,ep_as,state_values,back_prop=True)
+			#print(loss)
 			self.actor.update()
 
 	def renew_actor(self):
@@ -199,6 +213,7 @@ class PPO(object):
 if __name__ == '__main__':
 
 	RENDER = False
+	rewards = [[],[]]
 	env = gym.make('CartPole-v0')
 	env.seed(1)     # reproducible, general Policy gradient has high variance
 	env = env.unwrapped
@@ -223,7 +238,7 @@ if __name__ == '__main__':
 			epr+=r
 			buffer_rs.append(r)
 
-			if step%BATCH == 0 or step==MAX_STEPS-1 or done:
+			if step%BATCH == 0 or step==MAX_STEPS or done:
 				'''
 				# main loop debug
 				print('buffer_obs\n',buffer_obs)
@@ -234,7 +249,10 @@ if __name__ == '__main__':
 				if not done:
 					gs = agent.get_v(obs)
 				else:
-					gs = 0
+					if step == MAX_STEPS:
+						gs = MAX_STEPS
+					else:
+						gs = 0
 				for r in reversed(buffer_rs):
 					gs = r + GAMMA * gs
 					buffer_gs.append(gs)
@@ -244,7 +262,9 @@ if __name__ == '__main__':
 				# baseline, predicted by critor
 				state_values = agent.critor.give_score(buffer_obs).data.numpy()
 				# renew two nets
+				#print('actor update...')
 				agent.update_actor(buffer_obs,buffer_gs,buffer_as,state_values,train_iter=ACTOR_ITER)
+				#print('critor update...')
 				agent.update_critor(buffer_gs,buffer_obs,train_iter=CRITOR_ITER)
 				agent.renew_actor()
 
@@ -256,7 +276,17 @@ if __name__ == '__main__':
 			running_avg = epr
 		else:
 			running_avg = 0.9*running_avg+0.1*epr
+		#if running_avg >=4000: RENDER = True
 		print('epidode %s: '%(i_episode),epr,' runing_avg: ',running_avg)
+
+		rewards[0].append(epr)
+		rewards[1].append(running_avg)
+
+	plt.plot([i for i in range(1,len(rewards[0])+1)],rewards[0],'r-')
+	plt.plot([i for i in range(1,len(rewards[0])+1)],rewards[1],'b-')
+	plt.xlabel('episodes')
+	plt.ylabel('reward')
+	plt.show()
 
 
 
