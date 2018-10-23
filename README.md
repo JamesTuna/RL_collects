@@ -18,4 +18,7 @@
 - Note that there exists an upper bound of total rewards due to ```MAX_STEPS```
 - Next thing to be done: extend this algorithm to
   - Multi-process/thread (multi-actor, single critor; less correlation between experiences)
-  - Continuous action selection model
+  - Continuous action selection model   
+  
+![Training Curve](https://github.com/JamesTuna/RL_collects/blob/master/experiment_results/cartPoleSet8-1.png)
+Training curve for PPO on cartPole game from [OpenAI gym](https://gym.openai.com/), ```MAX_STEPS``` set to 5000 (therefore the maximum total reward can be obtained, for detailed hyperparameters setting, see set8 in ```experiment_results/RL_set```)
