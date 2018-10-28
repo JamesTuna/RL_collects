@@ -19,6 +19,9 @@
 - Next thing to be done: extend this algorithm to
   - Multi-process/thread (multi-actor, single critor; less correlation between experiences)
   - Continuous action selection model   
-  
+#### Test on [OpenAI gym](https://gym.openai.com/) games.
 ![Training Curve](https://github.com/JamesTuna/RL_collects/blob/master/experiment_results/cartPoleSet8-1.png)
-Training curve for PPO on cartPole game from [OpenAI gym](https://gym.openai.com/), ```MAX_STEPS``` set to 5000 (therefore the maximum total reward can be obtained, for detailed hyperparameters setting, see set8 in ```experiment_results/RL_set```)
+Training curve for PPO on cartPole game, ```MAX_STEPS``` set to 5000, hence the maximum total reward can be obtained is 5000. See detailed hyperparameters setting in ```experiment_results/RL_set```)   
+
+![Training Curve2](https://github.com/JamesTuna/RL_collects/blob/master/experiment_results/mtCar_set1.png)
+Training curve for PPO on mountain car game, ```MAX_STEPS``` set to 5000, hence the longest time step each episode can go on is 5000. See detailed hyperparameters setting in ```experiment_results/RL_set```)   
