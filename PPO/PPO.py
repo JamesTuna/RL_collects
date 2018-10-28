@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-import torch,math
+import torch,math,pickle
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 epsilon = 0.1
 GAMMA = 0.99
 BATCH = 256
-MAX_STEPS = 5000
-MAX_EPISODES = 2000
+MAX_STEPS = 10000
+MAX_EPISODES = 5000
 ACTOR_ITER = 10
 CRITOR_ITER = 2
 A_LR = 0.001
@@ -190,9 +190,11 @@ if __name__ == '__main__':
 	RENDER = False
 	rewards = [[],[]]
 	#env = gym.make('CartPole-v0')
-	env = gym.make('MountainCar-v0')
+	#env = gym.make('MountainCar-v0')
+	env = gym.make('LunarLander-v2')
 	env.seed(1)    
 	env = env.unwrapped
+	print(env.observation_space.shape)
 	agent = PPO(n_actions=env.action_space.n,n_features=env.observation_space.shape[0],
     			a_lr=A_LR,c_lr=C_LR,name='PPO_agent')
 
@@ -255,7 +257,7 @@ if __name__ == '__main__':
 
 		if RENDER: break
 	# for mountainCar
-	agent.save_model('./models/mtcar_step'+str(running_avg))
+	# agent.save_model('./models/mtcar_step'+str(running_avg))
 
 
 	plt.plot([i for i in range(1,len(rewards[0])+1)],rewards[0],'r-')
@@ -263,6 +265,13 @@ if __name__ == '__main__':
 	plt.xlabel('episodes')
 	plt.ylabel('reward')
 	plt.show()
+
+	with open('lander.pkl','wb') as f:
+		print('saving data...')
+		pickle.dump(rewards,f)
+
+	# for LunarLander-v2
+	agent.save_model('./models/lander_rwd'+str(running_avg))
 
 
 
