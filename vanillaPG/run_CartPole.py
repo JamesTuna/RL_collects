@@ -12,6 +12,7 @@ DISPLAY_REWARD_THRESHOLD = 500  # renders environment if total episode reward is
 RENDER = False  # rendering wastes time
 
 env = gym.make('CartPole-v0')
+env = gym.make('Pong-ram-v0')
 #env = gym.make('LunarLander-v2')
 env.seed(1)     # reproducible, general Policy gradient has high variance
 env = env.unwrapped

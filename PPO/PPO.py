@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 epsilon = 0.1
 GAMMA = 0.99
-BATCH = 32
+BATCH = 256
 MAX_STEPS = 5000
 MAX_EPISODES = 2000
 ACTOR_ITER = 10
@@ -36,11 +36,11 @@ class MLP_Net(nn.Module):
 		super(MLP_Net,self).__init__()
 		self.name = name
 		self.op = nn.Sequential(
-			nn.Linear(n_features,10),
+			nn.Linear(n_features,32),
 			nn.ReLU(),
-			nn.Linear(10,10),
+			nn.Linear(32,32),
 			nn.ReLU(),
-			nn.Linear(10,n_actions)
+			nn.Linear(32,n_actions)
 		)
 		self.init_weights()
 		self.use_softmax = use_softmax
@@ -76,11 +76,7 @@ class Critor(object):
 		ep_gs=checkAndConvert(ep_gs,self.name+' ep_gs').view(-1,1)
 		# ep_obs: (T,n_features); ep_gs: (T,); predicted: (T,)
 		predicted = self.net(ep_obs)
-		#print('updated v_value, ',predicted)
 		loss = self.loss_func(predicted,ep_gs)
-		#print('ep_gs\n',list(ep_gs.data.numpy().reshape(-1)))
-		#print('predicted\n',list(predicted.data.numpy().reshape(-1)))
-		#print('loss ',loss.data.numpy())
 		if back_prop:
 			loss.backward()
 		return loss
@@ -99,13 +95,14 @@ class Actor(object):
 		self.net = MLP_Net(n_features,n_actions,name=name+'_new')
 		self.optimizer = torch.optim.Adam(self.net.parameters(),lr=learning_rate)
 		self.old_net = MLP_Net(n_features,n_actions,name=name+'_old')
+		self.renew_old_para()
 
 	def choose_action(self,observation):
 		observation = checkAndConvert(observation,self.net.name+' choose action').view(1,-1)
 		prob = self.net(observation).data.numpy().reshape(-1)
 		#print('last_layer:\n',self.net.last_layer)
 		act = np.random.choice(range(len(prob)),p=prob)
-		# print(prob,act)
+		#print(prob,act)
 		return act
 
 	def calculate_loss(self,ep_obs,ep_gs,ep_as,state_values,back_prop=True):
@@ -118,13 +115,14 @@ class Actor(object):
 		state_values = checkAndConvert(state_values,self.net.name+' calculate_loss state_values').view(-1,1)
 
 		advantage = ep_gs - state_values
-		#advantage = (advantage-advantage.mean())/advantage.std()
+		# bad performance
+		# advantage = (advantage-advantage.mean())/advantage.std()
 
 		old_probs = self.old_net(ep_obs).detach() # [T,n_actions]
 		new_probs = self.net(ep_obs) # [T,n_actions]
 
 		'''
-		# following code results in nan
+		# following code results in nan, why?
 		ratio = new_probs/old_probs
 		#ratio = torch.exp(new_probs-old_probs)
 		# select probability of actions according to trajectory
@@ -141,32 +139,12 @@ class Actor(object):
 		clipped_ratio = torch.clamp(selected_ratio,1-epsilon,1+epsilon)
 		#######################################################
 
-
 		clipped_weighted_advan = clipped_ratio * advantage
 		original_weighted_advan = selected_ratio * advantage
 		final_weighted_advan = torch.min(clipped_weighted_advan,original_weighted_advan)
-		loss = -torch.mean(final_weighted_advan)
-		#print(loss)
+		loss = - torch.mean(final_weighted_advan)
 		if back_prop:
 			loss.backward()
-		'''
-		# for debug
-		print('advan: \n',advantage)
-		print('prob_ratio: \n',ratio)
-		print('acts: \n',ep_as)
-		print('selected_ratio, \n',selected_ratio)
-		print('clipped_ratio with ',epsilon,'\n',clipped_ratio)
-		print('original_weighted_advan:\n',original_weighted_advan)
-		print('clipped_weighted_advan:\n',clipped_weighted_advan)
-		print('final_weighted_advan:\n',final_weighted_advan)
-		print('loss: \n',loss)
-		#loss.backward()
-		print('after backward, grad')
-		for para in self.net.parameters():
-			print('new para ',para.grad)
-		for para in self.old_net.parameters():
-			print('old para ',para.grad)
-		'''
 		return loss
 
 	def update(self):
@@ -174,7 +152,6 @@ class Actor(object):
 		self.optimizer.zero_grad()
 
 	def renew_old_para(self):
-		#print('renew old parameters for %s'%(self.old_net.name))
 		self.old_net.load_state_dict(self.net.state_dict())
 
 
@@ -189,33 +166,32 @@ class PPO(object):
 
 	def update_critor(self,ep_gs,ep_obs,train_iter):
 		for i in range(train_iter):
-			#print(i,' round of optimization')
 			loss = self.critor.calculate_loss(ep_obs,ep_gs,back_prop=True)
-			#print(loss)
 			self.critor.update()
 
 	def update_actor(self,ep_obs,ep_gs,ep_as,state_values,train_iter):
 		for i in range(train_iter):
-			#print(i,' round of optimization')
 			loss = self.actor.calculate_loss(ep_obs,ep_gs,ep_as,state_values,back_prop=True)
-			#print(loss)
 			self.actor.update()
 
 	def renew_actor(self):
 		self.actor.renew_old_para()
 
 	def get_v(self,obs):
-		#a = self.critor.give_score(obs).data.numpy()
-		#print(a.shape)
 		return self.critor.give_score(obs).data.numpy()[0]
+
+	def save_model(self,path):
+		torch.save(self.actor.net.state_dict(),path+'_actor')
+		torch.save(self.critor.net.state_dict(),path+'_critor')
 		
 
 if __name__ == '__main__':
 
 	RENDER = False
 	rewards = [[],[]]
-	env = gym.make('CartPole-v0')
-	env.seed(1)     # reproducible, general Policy gradient has high variance
+	#env = gym.make('CartPole-v0')
+	env = gym.make('MountainCar-v0')
+	env.seed(1)    
 	env = env.unwrapped
 	agent = PPO(n_actions=env.action_space.n,n_features=env.observation_space.shape[0],
     			a_lr=A_LR,c_lr=C_LR,name='PPO_agent')
@@ -239,25 +215,15 @@ if __name__ == '__main__':
 			buffer_rs.append(r)
 
 			if step%BATCH == 0 or step==MAX_STEPS or done:
-				'''
-				# main loop debug
-				print('buffer_obs\n',buffer_obs)
-				print('buffer_as\n',buffer_as)
-				print('buffer_rs\n',buffer_rs)
-				print('buffer_gs\n',buffer_gs)
-				'''
 				if not done:
 					gs = agent.get_v(obs)
 				else:
-					if step == MAX_STEPS:
-						gs = MAX_STEPS
-					else:
-						gs = 0
+					gs = 0
 				for r in reversed(buffer_rs):
 					gs = r + GAMMA * gs
 					buffer_gs.append(gs)
+
 				buffer_gs = list(reversed(buffer_gs))
-				#print('buffer_gs\n',buffer_gs)
 
 				# baseline, predicted by critor
 				state_values = agent.critor.give_score(buffer_obs).data.numpy()
@@ -275,12 +241,22 @@ if __name__ == '__main__':
 		if i_episode == 0:
 			running_avg = epr
 		else:
-			running_avg = 0.9*running_avg+0.1*epr
-		#if running_avg >=4000: RENDER = True
+			running_avg = 0.99*running_avg+0.01*epr
+		'''
+		# for cartPole
+		if running_avg >=4999: 
+			RENDER = True
+			agent.save_model('./models/step'+str(step))
+		'''
 		print('epidode %s: '%(i_episode),epr,' runing_avg: ',running_avg)
 
 		rewards[0].append(epr)
 		rewards[1].append(running_avg)
+
+		if RENDER: break
+	# for mountainCar
+	agent.save_model('./models/mtcar_step'+str(running_avg))
+
 
 	plt.plot([i for i in range(1,len(rewards[0])+1)],rewards[0],'r-')
 	plt.plot([i for i in range(1,len(rewards[0])+1)],rewards[1],'b-')
