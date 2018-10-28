@@ -23,5 +23,5 @@
 ![Training Curve](https://github.com/JamesTuna/RL_collects/blob/master/experiment_results/cartPoleSet8-1.png)
 Training curve for PPO on cartPole game, ```MAX_STEPS``` set to 5000, hence the maximum total reward can be obtained is 5000. See detailed hyperparameters setting in ```experiment_results/RL_set```)   
 
-![Training Curve2](https://github.com/JamesTuna/RL_collects/blob/master/experiment_results/mtCar_set1.png)
+![Training Curve2](https://github.com/JamesTuna/RL_collects/blob/master/experiment_results/mtCar_set1.png)   
 Training curve for PPO on mountain car game, ```MAX_STEPS``` set to 5000, hence the longest time step each episode can go on is 5000. See detailed hyperparameters setting in ```experiment_results/RL_set```)   
