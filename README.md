@@ -20,7 +20,7 @@
   - Multi-process/thread (multi-actor, single critor; less correlation between experiences)
   - Continuous action selection model   
 #### Test on [OpenAI gym](https://gym.openai.com/) games.   
-![]((https://github.com/JamesTuna/RL_collects/blob/master/demo/gif/landerDemo.gif)
+
 
 ![Training Curve](https://github.com/JamesTuna/RL_collects/blob/master/experiment_results/cartPoleSet8-1.png)
 Training curve for PPO on cartPole game, ```MAX_STEPS``` set to 5000, hence the maximum total reward can be obtained is 5000. See detailed hyperparameters setting in ```experiment_results/RL_set```)   
