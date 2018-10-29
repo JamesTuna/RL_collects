@@ -1,6 +1,13 @@
 # RL_collects
 ## experiments of reinforcement learning algorithms
 
+### Deep Q-network
+- Simple version implemented, try it on cartPole game   
+- Further improvement to try:   
+  - Dueling structure of function approximate network based on [this paper](https://arxiv.org/pdf/1511.06581.pdf)
+  - Avoid overestimation by using double Q-learning, based on [this paper](https://arxiv.org/pdf/1509.06461.pdf)   
+  - Using prioritzed experience replay.  
+  
 ### vallinaPG
 - Implemented for discrete action space
 - Basic policy gradient with monte-carlo return
