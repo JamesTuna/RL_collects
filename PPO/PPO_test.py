@@ -2,7 +2,11 @@
 from PPO import *
 
 # 'CartPole-v0', 'MountainCar-v0'
+
 GAME = 'LunarLander-v2'
+#GAME = 'CartPole-v0'
+#GAME = 'MountainCar-v0'
+#GAME = 'Pendulum-v0'
 epsilon = 0.1
 GAMMA = 0.99
 BATCH = 256
@@ -23,7 +27,12 @@ if __name__ == '__main__':
 
 	env.seed(1)    
 	env = env.unwrapped
-	agent = PPO(n_actions=env.action_space.n,n_features=env.observation_space.shape[0],
+	if GAME == 'Pendulum-v0':
+		ACTION_SPACE = 25
+		agent = PPO(n_actions=ACTION_SPACE,n_features=env.observation_space.shape[0],
+    			a_lr=A_LR,c_lr=C_LR,name='PPO_agent')
+	else:
+		agent = PPO(n_actions=env.action_space.n,n_features=env.observation_space.shape[0],
     			a_lr=A_LR,c_lr=C_LR,name='PPO_agent')
 	
 	if GAME == 'LunarLander-v2':
@@ -34,10 +43,13 @@ if __name__ == '__main__':
 		# for cartPole demo
 		agent.actor.net.load_state_dict(torch.load('./models/step5000_actor'))
 		agent.critor.net.load_state_dict(torch.load('./models/step5000_critor'))
-	elif GAME == 'MountainCar-v0'
+	elif GAME == 'MountainCar-v0':
 		# for mountain car demo
 		agent.actor.net.load_state_dict(torch.load('./models/mtcar_step-116.1643907627642_actor'))
 		agent.critor.net.load_state_dict(torch.load('./models/mtcar_step-116.1643907627642_critor'))
+	elif GAME == 'Pendulum-v0':
+		agent.actor.net.load_state_dict(torch.load('./models/pendulumn_rwd-892.8866369093198_actor'))
+		agent.critor.net.load_state_dict(torch.load('./models/pendulumn_rwd-892.8866369093198_critor'))
 	else:
 		print('game unknown')
 		exit()
@@ -51,9 +63,17 @@ if __name__ == '__main__':
 		while(True):
 			env.render()
 			act = agent.choose_action(obs)
+			if GAME == 'Pendulum-v0':
+				f_action = (act-(ACTION_SPACE-1)/2)/((ACTION_SPACE-1)/4)   # [-2 ~ 2] float actions
+				f_action = np.array([f_action])
+
+			if GAME == 'Pendulum-v0':
+				obs,r,done,info = env.step(f_action)
+			else:
+				obs,r,done,info = env.step(act)
+
 			buffer_obs.append(obs)
 			buffer_as.append(act)
-			obs,r,done,info = env.step(act)
 			epr+=r
 			buffer_rs.append(r)
 			if done:

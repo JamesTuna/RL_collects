@@ -1,16 +1,17 @@
 #! /usr/bin/env python3
+import numpy as np
 import torch,math,pickle
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
 import gym as gym
 import matplotlib.pyplot as plt
 
-
+game = 'Pendulum-v0'
+game = 'CartPole-v0'
 epsilon = 0.1
 GAMMA = 0.99
-BATCH = 256
-MAX_STEPS = 10000
+BATCH = 512
+MAX_STEPS = 5000
 MAX_EPISODES = 5000
 ACTOR_ITER = 10
 CRITOR_ITER = 2
@@ -191,14 +192,21 @@ if __name__ == '__main__':
 	rewards = [[],[]]
 	#env = gym.make('CartPole-v0')
 	#env = gym.make('MountainCar-v0')
-	env = gym.make('LunarLander-v2')
+	#env = gym.make('LunarLander-v2')
+	env = gym.make(game)
 	env.seed(1)    
 	env = env.unwrapped
 	print(env.observation_space.shape)
-	agent = PPO(n_actions=env.action_space.n,n_features=env.observation_space.shape[0],
+	if game == 'Pendulum-v0':
+		ACTION_SPACE = 25
+		agent = PPO(n_actions=ACTION_SPACE,n_features=env.observation_space.shape[0],
+    			a_lr=A_LR,c_lr=C_LR,name='PPO_agent')
+	else:	
+		agent = PPO(n_actions=env.action_space.n,n_features=env.observation_space.shape[0],
     			a_lr=A_LR,c_lr=C_LR,name='PPO_agent')
 
 	running_avg = None
+
 	for i_episode in range(MAX_EPISODES):
 
 		epr = 0
@@ -210,9 +218,17 @@ if __name__ == '__main__':
 
 			if RENDER: env.render()
 			act = agent.choose_action(obs)
+
+			if game == 'Pendulum-v0':
+				f_action = (act-(ACTION_SPACE-1)/2)/((ACTION_SPACE-1)/4)   # [-2 ~ 2] float actions
+				f_action = np.array([f_action])
+
 			buffer_obs.append(obs)
 			buffer_as.append(act)
-			obs,r,done,info = env.step(act)
+			if game == 'Pendulum-v0':
+				obs,r,done,info = env.step(f_action)
+			else:
+				obs,r,done,info = env.step(act)
 			epr+=r
 			buffer_rs.append(r)
 
@@ -245,6 +261,12 @@ if __name__ == '__main__':
 		else:
 			running_avg = 0.99*running_avg+0.01*epr
 		'''
+		# for pendulumn
+		if running_avg >= -900:
+			agent.save_model('./models/pendulumn_rwd'+str(running_avg))
+			RENDER = True
+		'''
+		'''
 		# for cartPole
 		if running_avg >=4999: 
 			RENDER = True
@@ -265,17 +287,10 @@ if __name__ == '__main__':
 	plt.xlabel('episodes')
 	plt.ylabel('reward')
 	plt.show()
-
-	with open('lander.pkl','wb') as f:
-		print('saving data...')
-		pickle.dump(rewards,f)
-
+	'''
 	# for LunarLander-v2
 	agent.save_model('./models/lander_rwd'+str(running_avg))
-
-
-
-
+	'''
 
 
 

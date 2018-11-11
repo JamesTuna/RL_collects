@@ -8,11 +8,11 @@ import pickle
 rewards = [[],[]]
 GAMMA = 0.99
 
-DISPLAY_REWARD_THRESHOLD = 500  # renders environment if total episode reward is greater then this threshold
+DISPLAY_REWARD_THRESHOLD = 50000  # renders environment if total episode reward is greater then this threshold
 RENDER = False  # rendering wastes time
 
 env = gym.make('CartPole-v0')
-env = gym.make('Pong-ram-v0')
+#env = gym.make('Pong-ram-v0')
 #env = gym.make('LunarLander-v2')
 env.seed(1)     # reproducible, general Policy gradient has high variance
 env = env.unwrapped
