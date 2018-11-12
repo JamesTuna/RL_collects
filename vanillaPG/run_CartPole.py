@@ -8,7 +8,7 @@ import pickle
 rewards = [[],[]]
 GAMMA = 0.99
 
-DISPLAY_REWARD_THRESHOLD = 50000  # renders environment if total episode reward is greater then this threshold
+DISPLAY_REWARD_THRESHOLD = 5000  # renders environment if total episode reward is greater then this threshold
 RENDER = False  # rendering wastes time
 
 env = gym.make('CartPole-v0')
@@ -79,6 +79,8 @@ for i_episode in range(1000):
                 print("saving model...")
                 RL.save_model('./model/step'+str(i_episode))
             break
+
+            if RENDER: break
 
         observation = observation_
 ofile = open('sw_0.001_0.99','wb')

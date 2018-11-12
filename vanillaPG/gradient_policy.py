@@ -145,6 +145,14 @@ class Actor(object):
 		for t in range(len(self.ep_rs)):
 			discounted_ep_rs[t] = running_add - self.moving_rewards
 		'''
+		# valina policy gradient
+		# no baseline
+		'''
+		self.moving_rewards = 0.9*self.moving_rewards + 0.1 * running_add
+		for t in range(len(self.ep_rs)):
+			discounted_ep_rs[t] = running_add
+		'''
+		
 		return discounted_ep_rs
 
 	def learn(self):
