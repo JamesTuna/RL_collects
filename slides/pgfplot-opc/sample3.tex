@@ -1,0 +1,39 @@
+
+\begin{filecontents}{sample3.dat}
+alpha    Sample1      Sample2       
+0        0.862    0.802 
+0.1      0.892    0.833    
+0.2      0.917    0.861   
+0.3      0.936    0.891 
+
+\end{filecontents}
+
+\pgfplotsset{
+    width =0.40\textwidth,
+    height=0.26\textwidth
+}
+\begin{tikzpicture}[scale=1]
+\begin{axis}[minor tick num=0,
+%xmin=0.20, xmax=0.90,
+xmax=0.32,
+%ymin=0.5, ymax=2.0,
+%xtick={0.3,0.4,...,0.8},
+%ytick={0.6,0.8,...,1.8},
+yticklabel style={/pgf/number format/.cd, fixed, fixed zerofill, precision=3, /tikz/.cd},
+%scaled y ticks=base 10:0,
+xlabel={$\alpha$},
+ylabel={yield},
+xlabel near ticks,
+legend style={
+  draw=none,
+  at={(0.50,1.36)},
+  anchor=north,
+  legend columns=3,
+}
+]
+\addplot +[line width=0.7pt] [color=myyellow, solid, mark=pentagon]  table [x={alpha},  y={Sample1}]  {sample3.dat};
+\addplot +[line width=0.7pt] [color=mylight,  solid, mark=diamond]   table [x={alpha},  y={Sample2}]  {sample3.dat};
+
+\legend{Sample 1 ,Sample 2 }
+\end{axis}
+\end{tikzpicture}

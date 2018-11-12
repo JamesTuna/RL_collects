@@ -1,0 +1,39 @@
+
+\begin{filecontents}{fa.dat}
+alpha   Shift-Boundary   Bias      
+80      2309    2309
+83      2853    2251
+86      3391    2825
+89      4193    3526
+
+\end{filecontents}
+
+\pgfplotsset{
+    width =0.74\textwidth,
+    height=0.6\textwidth
+}
+\begin{tikzpicture}[scale=1]
+\begin{axis}[minor tick num=0,
+%xmin=0.20, xmax=0.90,
+xmax=90,
+ymin=2000,
+%ymin=0.5, ymax=2.0,
+%xtick={0.3,0.4,...,0.8},
+%ytick={0.6,0.8,...,1.8},
+yticklabel style={/pgf/number format/.cd, fixed, fixed zerofill, precision=0, /tikz/.cd},
+%scaled y ticks=base 10:0,
+xlabel={Accuracy (\%)},
+ylabel={False Alarm},
+xlabel near ticks,
+legend style={
+  draw=none,
+  at={(0.50,1.26)},
+  anchor=north,
+  legend columns=3,
+}
+]
+\addplot +[line width=0.7pt] [color=myblue,   solid, mark=pentagon]  table [x={alpha},  y={Shift-Boundary}]  {fa.dat};
+\addplot +[line width=0.7pt] [color=mylight,  solid, mark=diamond]   table [x={alpha},  y={Bias}]            {fa.dat};
+\legend{Shift-Boundary,Bias}
+\end{axis}
+\end{tikzpicture}

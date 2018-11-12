@@ -1,0 +1,34 @@
+\pgfplotsset{scaled y ticks=false}
+\begin{tikzpicture}
+\pgfplotsset{
+	width =0.4\textwidth,
+	height=0.3\textwidth,
+	every axis plot/.append style = {font = \tiny},
+	/pgfplots/bar cycle list/.style={/pgfplots/cycle list={%
+{black,fill=myblue2},
+		}
+	},
+}
+\begin{axis}[
+ybar=2.5pt,
+enlargelimits=0.15,
+bar width=20pt,
+legend style={at={(0.5,1.2)},
+	anchor=north,legend columns=-1},
+area legend,
+ylabel={PVBand ($nm^2$)},
+symbolic x coords={ILT, GAN, PGAN},
+xtick=data,
+ymin=49000,
+ytick={49000,49500,50000,50500,51000},
+ylabel near ticks,
+ x tick label style={rotate=0,font=\small},
+%nodes near coords,
+%nodes near coords align={vertical},
+]
+\addplot  coordinates {(ILT,50899) (GAN,50568) (PGAN,49957)};
+
+
+%\legend{SPIE'15,ICCAD'16,Ours}
+\end{axis}
+\end{tikzpicture}

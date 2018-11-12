@@ -1,0 +1,229 @@
+
+% ===============================================
+%          beamer slides setting
+%
+%   Author      : Bei Yu
+%   Last Update : 16/2018
+% ===============================================
+
+\setbeamerfont{frametitle}{size=\LARGE}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+% =============================================
+%            Specify colors
+% =============================================
+%\usepackage{xcolor}
+\definecolor{myorange}{RGB}{244,106,18} %F47012
+\definecolor{myblue}{RGB}{0,111,190}    %006FBE
+\definecolor{mygreen}{RGB}{0,127,128}   %007F80
+\definecolor{myred}{RGB}{228,46,36}     %E42E24
+\definecolor{myyellow}{RGB}{198,148,34} %C69422
+\definecolor{mydark}{RGB}{114,44,114}   %722C72
+\definecolor{mymiddle}{RGB}{144,44,144} %902C90
+\definecolor{mylight}{RGB}{167,44,167}  %A72CA7
+\definecolor{CUHKorange}{RGB}{244,106,18} %F47012
+\definecolor{CUHKblue}{RGB}{0,111,190}    %006FBE
+\definecolor{CUHKgreen}{RGB}{0,127,128}   %007F80
+\definecolor{CUHKred}{RGB}{228,46,36}     %E42E24
+\definecolor{CUHKyellow}{RGB}{198,148,34} %C69422
+\definecolor{CUHKdark}{RGB}{114,44,114}   %722C72
+\definecolor{CUHKmiddle}{RGB}{144,44,144} %902C90
+\definecolor{CUHKlight}{RGB}{167,44,167}  %A72CA7
+\setbeamercolor{structure}{fg=CUHKblue}
+\setbeamercolor{alerted text}{fg=CUHKorange}
+
+% ==== packages
+\usepackage{bm}
+\usepackage{algpseudocode}           % for algorithm
+\usepackage{algorithm}
+\usepackage{pgfpages}                % allow note printing
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
+\usepackage{amsmath}
+\usepackage{newtxtext}               % to use Times font (only for text, but not for math)
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{filecontents}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{tikzscale}
+%\captionsetup[figure]{font=scriptsize,textfont={color=CUHKgreen},labelformat=empty}
+\captionsetup[figure]{font=footnotesize,labelformat=empty}
+\usepackage[english]{babel}
+\usepackage{wasysym}                 % smiling face
+\usepackage{animate}                 % animation 
+\usefonttheme[onlymath]{serif}       % 
+\usepackage{etoolbox}                % commands \newtoggle, \toggletrue, \iftoggle
+\usepackage{courier}                 % courier font, used in \texttt
+\usepackage{soul}
+\usepackage{booktabs}                % toprule bottomrule
+\usepackage{listings}                % typeset source code listings
+\lstset{basicstyle=\ttfamily,breaklines=true}
+\lstdefinestyle{base}
+{
+    language   = C,
+    emptylines = 1,
+    breaklines = true,
+    basicstyle = \ttfamily\scriptsize,
+    moredelim  = **[is][\color{red}]{@}{@},
+}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks = true,
+    urlcolor   = CUHKgreen,
+    citecolor  = cyan,
+    linkcolor  = CUHKgreen,
+}
+
+
+% =============================================
+%         Specify some local functions
+% =============================================
+\newcommand{\m}[1]{\mathbf{#1}}
+
+
+% Fix caption package bug
+% https://tex.stackexchange.com/questions/426088/texlive-pretest-2018-beamer-and-subfig-collide
+\makeatletter
+\let\@@magyar@captionfix\relax
+\makeatother
+
+
+% Fix UTF-8 encoding problem
+% https://tex.stackexchange.com/questions/429190/package-inputenc-error-invalid-utf-8-byte-147
+\UseRawInputEncoding
+
+% ======================================================
+%             Slides theme
+% ======================================================
+\mode<presentation> {
+  % === background
+  %\setbeamertemplate{background canvas}[vertical shading][bottom=red!10,top=blue!10]
+
+  % === setting theme
+  %\usetheme{Pittsburgh}
+  %\usetheme{Warsaw}         % most complex header
+  \usetheme{default}        % only header line
+  %\usetheme{Madrid}         % header line and bxottom line
+  %\usetheme{AnnArbor}       % simple outline
+  %\usefonttheme[onlysmall]{structurebold}
+}
+
+
+% =========================================================
+%               Color theme
+% =========================================================
+%\usecolortheme{wolverine}      % yellow + orange
+%\usecolortheme{crane}          % all orange
+%\usecolortheme{seahorse}       % blue + grey
+\usecolortheme{rose}           % default blue
+%\usecolortheme{default}
+
+
+%\mode<article> % only for the article version
+%{
+%  \usepackage{fullpage}
+%  \usepackage{hyperref}
+%}
+
+
+% ========================================
+%           block setting
+% ========================================
+% varblock
+\newenvironment<>{varblock}[2][\textwidth]{%
+  \setlength{\textwidth}{#1}
+  \setbeamercolor{block title}{fg=white,bg=CUHKblue}
+  \setbeamercolor{block body}{fg=black,bg=blue!10}
+  \begin{actionenv}#3%
+  \def\insertblocktitle{#2}%
+  \par%
+  \usebeamertemplate{block begin}}
+  {
+    \par%
+    \usebeamertemplate{block end}%
+    \end{actionenv}
+  }
+% question block 
+\newenvironment<>{qblock}[2][\textwidth]{%
+  \setlength{\textwidth}{#1}
+  \setbeamercolor{block title}{fg=black,bg=CUHKyellow!40}
+  \setbeamercolor{block body}{fg=black,bg=white}
+  \begin{actionenv}#3%
+  \def\insertblocktitle{#2}%
+  \par%
+  \usebeamertemplate{block begin}}
+  {
+    \par%
+    \usebeamertemplate{block end}%
+    \end{actionenv}
+  }
+\setbeamerfont{block title}{size=\large}
+\setbeamerfont{block title example}{size=\large}
+\setbeamerfont{block title alerted}{size=\large}
+\setbeamercolor{block title}{fg=CUHKorange}
+\setbeamercolor{block title alerted}{fg=CUHKblue}
+
+
+% ==================================================
+%         Corner logo on title page
+% ==================================================
+%\titlegraphic{
+%    \hspace{8cm}
+%    \includegraphics[width=1cm]{./figs/logo_utece}
+%}
+
+% ==================================================
+%              Corner logo
+% ==================================================
+%\pgfdeclareimage[width=1cm]{logo}{./figs/logo_utda}
+%\logo{\vbox{
+%\hbox to 1cm{
+% \hfil\pgfuseimage{logo}}
+%  %\vskip0.1cm
+%  %\hbox{\pgfuseimage{ur-logo}}
+%  }
+%}
+
+
+
+
+
+% =========================================================
+%               Showing page number
+% =========================================================
+\iftrue
+\defbeamertemplate*{footline}{shadow theme}
+{
+  \leavevmode
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fil,rightskip=.3cm]{author in head/foot}
+    \usebeamerfont{author in head/foot}\insertframenumber\,/\,\inserttotalframenumber\hfill\insertshortauthor
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}}
+  \vskip0pt
+}
+\fi
+
+%\setbeamercovered{dynamic}
+%\beamertemplateshadingbackground{white}{white}
+
+% ==== Log
+%
+%  06/2016: fix bug from caption package
+%  11/2016: block settings
+%  10/2016: title font size huge -> LARGE
+%  09/2016: qblock for teaching slides
+%  05/2016: set frametitle size to huge, by default beamer uses 9pt
+%  05/2016: customize figure caption: font size, font color, and remove 'Figure' label
+%  03/2016: listing, hyperref
+%  03/2015: no logo settings in library file, move to local specific tex file 
+%  03/2015: package{etoolbox}
+%  02/2015: no corner logo in main pages
+%  05/2014: new varblock definition;  package{wasysym} to show smiling face
+%  10.2014: package{serif} for article style math fonts
+%  
+
+

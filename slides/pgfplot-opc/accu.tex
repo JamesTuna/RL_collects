@@ -1,0 +1,41 @@
+
+\begin{filecontents}{accu.dat}
+alpha   Shift-Boundary   Bias  
+0	   80.23	80.23
+0.1	    84.65	83.28
+0.2	   89.09	86.09
+0.3	   92.35	89.09
+
+
+\end{filecontents}
+
+\pgfplotsset{
+    width =0.24\textwidth,
+    height=0.25\textwidth
+}
+\begin{tikzpicture}[scale=1]
+\begin{axis}[minor tick num=0,
+%xmin=0.20, xmax=0.90,
+xmax=0.32,
+ymax=95,
+%ymin=0.5, ymax=2.0,
+%xtick={0.3,0.4,...,0.8},
+%ytick={0.6,0.8,...,1.8},
+yticklabel style={/pgf/number format/.cd, fixed, fixed zerofill, precision=0, /tikz/.cd},
+%scaled y ticks=base 10:0,
+xlabel={level},
+ylabel={Accuracy (\%)},
+xlabel near ticks,
+legend style={
+  draw=none,
+  at={(0.60,1.26)},
+  anchor=north,
+  legend columns=3,
+}
+]
+\addplot +[line width=0.7pt] [color=myblue,   solid, mark=pentagon]  table [x={alpha},  y={Shift-Boundary}]  {accu.dat};
+\addplot +[line width=0.7pt] [color=mylight,  solid, mark=diamond]   table [x={alpha},  y={Bias}]  {accu.dat};
+
+\legend{\texttt{Shift-Boundary}}
+\end{axis}
+\end{tikzpicture}

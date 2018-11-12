@@ -1,0 +1,101 @@
+\documentclass[table,aspectratio=1610]{beamer}
+\input{./slides-setting}
+\graphicspath{{./figs/}}
+
+% ==== define xmark
+\usepackage{pifont}
+\newcommand{\xmark}{\ding{56}}
+
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calD}{\mathcal{D}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calP}{\mathcal{P}}
+\newcommand{\calNP}{\mathcal{NP}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}           % norm of vector and matrix
+\definecolor{mygreen2}{RGB}{76,153,0}
+\definecolor{mygrey}{RGB}{192,192,192}
+\definecolor{myblue2}{RGB}{51,153,255}
+
+% =============================================
+%           pre-definitions
+% =============================================
+\newtoggle{animation}       \togglefalse{animation}
+\newtoggle{use-note}        \togglefalse{use-note}
+\newtoggle{show-detail}     \toggletrue{show-detail}
+
+% =============================================
+%               Set Up Notes
+% =============================================
+\iftoggle{use-note}
+{
+%\setbeameroption{show notes on second screen=right}
+\setbeameroption{show notes on second screen=bottom}
+\setbeamertemplate{note page}[plain] 
+}
+
+
+\title[]{\LARGE\textbf{
+    Reinforcement Learning: function approximation
+}}
+\author[]{\large
+  Zihao DENG\\ Wenqian ZHAO
+}
+\institute{\large
+  \textcolor{CUHKgreen}{
+  Department of Computer Science and Engineering \\
+  The Chinese University of Hong Kong
+  }
+}
+\date{}
+
+
+% ==================================================
+%             logo on title page
+% ==================================================
+%\titlegraphic
+%{
+%    \includegraphics[height=1.2cm]{logo-cuhk}
+%}
+
+
+
+\begin{document}
+
+\usebackgroundtemplate
+{
+    \includegraphics[width=\paperwidth,height=\paperheight]{figs/background-1610}
+}
+\begin{frame}
+    \vspace{.2in}
+    \titlepage
+\end{frame}
+\usebackgroundtemplate{}
+
+
+% ==== Corner logo on each pages
+\pgfdeclareimage[width=.8cm]{logo}{./figs/logo-cuhk-sim}
+\logo{\vbox{
+    \hbox to 1.0cm{
+    \hfil\pgfuseimage{logo}}
+    }
+}
+
+
+\iffalse
+\begin{frame}
+\frametitle{Outline}
+    \tableofcontents[part=1]%,pausesections]
+\end{frame}
+\AtBeginSection[]
+{
+    \begin{frame}{Outline}
+    \tableofcontents[currentsection]
+    \end{frame}
+    \addtocounter{framenumber}{-1} % doesn't affect the slide num
+}
+\part<presentation>{Main Talk}
+\fi
+\input{doc/MDP}
+\input{doc/repo}
+\end{document}
+

@@ -1,0 +1,54 @@
+
+\begin{filecontents}{svm.dat}
+alpha   MGD    SGD       
+7	0	0
+96	44	15
+186	60	35
+276	55	34
+368	78	61
+457	81	54
+549	79	40
+642	94	51
+734	85	61
+823	93	50
+911	88	59
+1000	95	57
+1179	90	65
+1272	95	48
+1362	96	73
+1449	93	67
+
+
+\end{filecontents}
+
+\pgfplotsset{
+    width =0.3\textwidth,
+    height=0.20\textwidth
+}
+\begin{tikzpicture}[scale=1]
+\begin{axis}[minor tick num=0,
+%xmin=0.20, xmax=0.90,
+xmax=1500,
+ymax=100,
+%ymin=0.5, ymax=2.0,
+%xtick={0.3,0.4,...,0.8},
+%ytick={0.6,0.8,...,1.8},
+yticklabel style={/pgf/number format/.cd, fixed, fixed zerofill, precision=2, /tikz/.cd},
+%scaled y ticks=base 10:0,
+xlabel={Elapsed Time (s)},
+ylabel={Accuracy (\%)},
+xlabel near ticks,
+legend style={
+  draw=none,
+  at={(0.50,1.26)},
+  anchor=north,
+  legend columns=3,
+}
+]
+\addplot +[line width=0.7pt] [color=myblue,   solid, mark=pentagon]  table [x={alpha},  y={SGD}]  {svm.dat};
+\addplot +[line width=0.7pt] [color=mylight,  solid, mark=diamond]   table [x={alpha},  y={MGD}]  {svm.dat};
+
+\legend{SGD, MGD}
+
+\end{axis}
+\end{tikzpicture}

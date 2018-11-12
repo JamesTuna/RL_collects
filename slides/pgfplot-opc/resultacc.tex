@@ -1,0 +1,25 @@
+\begin{tikzpicture}
+\pgfplotsset{
+	width =1.2\textwidth,
+	height=1\textwidth,
+	every axis plot/.append style = {font = \tiny}
+}
+\begin{axis}[
+ybar=2.5pt,
+enlargelimits=0.15,
+bar width=6pt,
+legend style={at={(0.5,-0.15)},
+	anchor=north,legend columns=-1},
+area legend,
+ylabel={Accuracy (\%)},
+y label style={at={(axis description cs:0.4,1.1)},rotate=270,anchor=south},
+symbolic x coords={SPIE'15,ICCAD'16,SOCC'17,SPIE'17,DAC'17,TCAD'17},
+xtick=data,
+x tick label style={rotate=35,anchor=east,font=\small},
+%nodes near coords,
+%nodes near coords align={vertical},
+]
+\addplot  coordinates {(SPIE'15,60.67) (ICCAD'16,86.87) (SOCC'17,91.20) (SPIE'17,88.17)(DAC'17,94.60)(TCAD'17,95.03)};
+
+\end{axis}
+\end{tikzpicture}
