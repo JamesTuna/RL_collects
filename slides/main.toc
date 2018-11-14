@@ -1,3 +1,0 @@
-\babel@toc {english}{}
-\beamer@sectionintoc {1}{Optical Proximity Correction (OPC)}{2}{0}{1}
-\beamer@sectionintoc {2}{Optical Proximity Correction (OPC)}{18}{0}{2}

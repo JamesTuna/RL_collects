@@ -1,5 +1,5 @@
 \graphicspath{{./figs/repo/}{./figs/}}
-\section{Optical Proximity Correction (OPC)}
+\section{Policy based Reinforcement Learning}
 
 \begin{frame}{Value Function Approximation}
     %{{{
@@ -80,11 +80,12 @@
 
 \begin{frame}{Policy based method}
     What's wrong with value based methods?\\\vspace{0.2cm}
-    \begin{center}\includegraphics[width=.6\textwidth]{mirrorState}\end{center}
+    \begin{center}\includegraphics[width=.6\textwidth]{alias}\end{center}
     \begin{itemize}
         \item Main problem: deterministic policy
         \item No good for partially observable environment
-        \item Should I go left or right?
+        \item The agent cannot differentiate the grey states
+        \item An optimal deterministic will either go left or right
     \end{itemize}
 \end{frame}
 
@@ -161,13 +162,13 @@
 
 
 \begin{frame}{Vanilla Policy Gradient: \textbf{REINFORCE}}
-    So far, we obtain the first policy gradient algotithm called \textbf{REINFORCE} \textcolor{CUHKgreen}{\footnotesize[Williams, R. J.]}
+    So far, we obtain the first policy gradient algotithm called \href{http://www-anw.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf}{\textbf{REINFORCE}} \textcolor{CUHKgreen}{\footnotesize[Williams, R. J.]}
     \begin{center}\includegraphics[width=.9\textwidth]{REINFORCE}\end{center}
 \end{frame}
 
 \begin{frame}{Vanilla Policy Gradient: \textbf{REINFORCE}}
     \vspace{0.2cm}
-    \begin{center}Experiment on CartPole game:\\Bad performance, even not converge after 1000 episodes of training\\\includegraphics[width=.7\textwidth]{REINFORCE1}\end{center}
+    \begin{center}Experiment on CartPole game:\\Bad performance, worse than random play after 1000 episodes of training\\\href{https://www.youtube.com/watch?v=1bvTOM7Az3s}{\includegraphics[width=.7\textwidth]{REINFORCE1}}\end{center}
 \end{frame}
 
 \begin{frame}{Improvement for \textbf{REINFORCE}: baseline}
@@ -231,7 +232,7 @@
 
 \begin{frame}{Improvement for \textbf{REINFORCE}: advantage function}
     \vspace{0.2cm}
-    \begin{center}Experiment on CartPole game:\\Only after 141 episodes of training, surviving time boosted to 20k! \\\includegraphics[width=.7\textwidth]{adv_REINFORCE}\end{center}
+    \begin{center}Experiment on CartPole game:\\Only after 141 episodes of training, surviving time boosted to 20k! \\\href{https://youtu.be/6EdXsW5A1iU}{\includegraphics[width=.7\textwidth]{adv_REINFORCE}}\end{center}
 \end{frame}
 
 \begin{frame}{Actor-Critic: a combination}
@@ -240,16 +241,15 @@
         \item Value-based: problem of deterministic policy in partially observed environments\vspace{0.3cm}
         \item Policy-based: credit assignment problem (delay between action and reward)\vspace{0.3cm}
         \item Why not combine them?\vspace{0.3cm}
-        \item Still use parameterized function for policy\vspace{0.3cm}
-        \item But also add an estimator for state values to approximate advantage function\vspace{0.3cm}
-        \item Stochastic policy agent without problem of update delay!
+        \item Still use policy function\vspace{0.3cm}
+        \item Also adopt an estimator for state values to approximate advantage function\vspace{0.3cm}
+        \item Policy updates without delay!
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Actor-Critic: algorithm}
     \vspace{0.2cm}
-    Now there are two function to learn: policy function $\pi_{\theta}$ is known as actor and value estimator $\hat{V_{\varphi}}$ is known as critic, hence the model named \textbf{Actor-Critic}.\\\vspace{0.2cm}
-    The overall algorithm can be like this (there are many variants, this is what we use in our experiment)\\\vspace{0.2cm}
+    Now there are two function to learn: policy function $\pi_{\theta}$ is known as actor and value estimator $\hat{V_{\varphi}}$ is known as critic, hence the model named \textbf{Actor-Critic}.
     \begin{center}\includegraphics[width=.8\textwidth]{AC1}\end{center}
 \end{frame}
 
@@ -290,15 +290,50 @@
 \end{equation}
 \end{frame}
 
-\begin{frame}{Further improvement: clipped objective function}
+\begin{frame}{Proximal Policy Optimization(PPO)}
     \vspace{0.15cm}
-    The algorithm is known as Proximal Policy Optimization \textcolor{CUHKgreen}{\footnotesize[Schulman, John et al.]}\\\vspace{0.15cm}
-    Only with minor modification on previous Actor-Critic algorithm:\\\vspace{0.1cm}
+    The algorithm is known as \href{https://arxiv.org/pdf/1707.06347.pdf}{Proximal Policy Optimization} \textcolor{CUHKgreen}{\footnotesize[Schulman, John et al.]}\\\vspace{0.15cm}
     \includegraphics[width=.8\textwidth]{PPO1}
 \end{frame}
 
+\begin{frame}{Proximal Policy Optimization(PPO): some demo}
+    \vspace{0.15cm}
+    Test on \href{https://gym.openai.com/}{OpenAI gym} Agents implemented and trained using \href{https://en.wikipedia.org/wiki/PyTorch}{Pytorch}\\\vspace{0.15cm}
+    For detailed information about task environment, check \href{https://github.com/openai/gym/wiki/Table-of-environments}{this list}\\\vspace{0.15cm}
+    \begin{itemize}
+        \item CartPole-v0: \href{https://www.youtube.com/watch?v=1bvTOM7Az3s}{no training} and \href{https://www.youtube.com/watch?v=l1gOoNFSq8E}{trained}
+        \item MountainCar-v0: \href{https://www.youtube.com/watch?v=SAGHdqGvbzA}{no training} and \href{https://www.youtube.com/watch?v=6wYzj74x_l4}{trained}
+        \item LunarLander-v2: \href{https://www.youtube.com/watch?v=ZFmx0l6Pe60}{no training} and \href{https://www.youtube.com/watch?v=BysTYEG4fDE}{trained}
+        \item Pendulum-v0: \href{https://www.youtube.com/watch?v=bxojAfY5PPw&t=5s}{no training} and \href{https://www.youtube.com/watch?v=yasKyY3hE88}{trained}
+    \end{itemize}
+    Some strategyies in our training:\\\vspace{0.15cm}
+     \begin{itemize}
+        \item For continous action space (like Pendulum-v0): discretize it
+        \item Set a maximum number (5000) of steps for each episode during training
+        \item Use a large batch size (512) to perform gradient descent
+        \item Adopt different step size for Actor and Critic updates
+        \item Have a look at \href{https://github.com/JamesTuna/RL_collects/blob/master/PPO/PPO.py}{our code} on github
+    \end{itemize}
+\end{frame}
+
+
+
 \begin{frame}{Further improvement: high score buffer replay}
-    
-    
+    \begin{itemize}
+        \item The learning curve is like:\\\vspace{0.2cm}
+        \begin{center}\includegraphics[width=.7\textwidth]{no_buffer}\end{center}
+    \end{itemize}  
+\end{frame}
+
+
+
+\begin{frame}{Further improvement: high score buffer replay}
+    \begin{itemize}
+        \item A Typical training curve in Reinforcement Learning\\\vspace{0.2cm}
+        \item Not stable: immature policy, more frequent explorational moves\\\vspace{0.2cm}
+        \item Another problem: cases where positive signals are extremely rare\\\vspace{0.2cm}
+        \item Idea comes naturally: store those trajectories with high score in a buffer\\\vspace{0.2cm}
+        \item Use importance sampling to learn from high score buffer from time to time\\\vspace{0.2cm}
+    \end{itemize}  
 \end{frame}
 
