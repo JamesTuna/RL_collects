@@ -1,66 +1,7 @@
 \graphicspath{{./figs/repo/}{./figs/}}
 \section{Policy based Reinforcement Learning}
 
-\begin{frame}{Value Function Approximation}
-    %{{{
-    \begin{center}\includegraphics[width=.6\textwidth]{fun_app}\end{center}
-    \begin{itemize}
-        \item Tablular methods: impossible to record all states for real word problems 
-        \item Function approximation: generalize from seen states to unseen states
-    \end{itemize}
-\end{frame}
 
-\begin{frame}{Value Function Approximation}
-    \begin{itemize}
-        \item Goal: find parameter vector $w$ minimising mean-squared error between approximate value function $\hat{v}(S,w)$ and true value function $v_{\pi}(S)$
-        \begin{align}
-            \label{eq:1}
-            J(w) = ||v_{\pi}(S)-\hat{v}(S,w)||_2^2
-        \end{align}
-        \item Stochastic gradient descent
-        \begin{align}
-            \label{eq:1}
-            \Delta w = \alpha (v_{\pi}(s)-\hat{v}(S,w)) \nabla_{w}\hat{v}(S,w)
-        \end{align}
-        \item In reality we don't have the true value function $v_{\pi}(S)$\\
-        \vspace{0.2cm}
-        \hspace{0.5cm}$\bullet$ For Monte-Carlo, use discounted return $G_t$\\
-        \vspace{0.2cm}
-        \hspace{0.5cm}$\bullet$ For TD, use $R_{t+1}+\lambda \hat{v}(S_{t+1},w)$
-        
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Deep Q-Networks (DQN)}
-    %{{{
-    \begin{itemize}
-        \item Take action $a_t$ according to $\epsilon$-greedy policy
-        \item Store transition $(s_t,a_t,r_{t+1},s_{t+1})$ in memory $D$
-        \item Sample random mini-batch of transitions $(s,a,r,s')$ from $D$
-        \item Compute Q-learning targets w.r.t. old, fixed parameters $w^-$
-        \item Optimise MSE between Q-network and Q-learning targets
-            \begin{align}
-                \label{eq:2}
-                L(w) = \mathrm{E}_{s,a,s,r' \sim D_i}[(r+\gamma \max_{a'} Q(s',a';w^-)-Q(s,a;w))^2]
-            \end{align}
-        \item Two important tricks in ensuring convergence: experience replay and fixed target
-
-    \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Deep Q-Networks(DQN): play games in OpenAI gym}
-    %{{{
-    \begin{center}\includegraphics[width=.4\textwidth]{pole}\end{center}
-    \begin{itemize}
-        \item States are represented by 4-element tuples (position,cart velocity,angle,tip velocity)
-        \item Actions can be either moving left or right
-        \item Function approximator is a feed foward neural network 
-        \item 1 hidden layer with 10 neurons, 2 output neurons representing value estimation for two actions
-        \item Implemented using torch and tensorflow, can stay alive for 1 minute
-    \end{itemize}
-
-\end{frame}
 
 \begin{frame}{Policy based method}
     Value based method (previous sildes):
@@ -80,12 +21,13 @@
 
 \begin{frame}{Policy based method}
     What's wrong with value based methods?\\\vspace{0.2cm}
-    \begin{center}\includegraphics[width=.6\textwidth]{alias}\end{center}
+    \begin{center} \href{https://www.youtube.com/watch?v=pKkbf9hnvXY}{\includegraphics[width=.6\textwidth]{alias}}\end{center}
     \begin{itemize}
         \item Main problem: deterministic policy
         \item No good for partially observable environment
-        \item The agent cannot differentiate the grey states
-        \item An optimal deterministic will either go left or right
+        \item The agent cannot differentiate the grey states (Horizontally symmetric)
+        \item An optimal deterministic will either go left or right 
+        \item In this case, if change starting point, the agent may not reach optimal:\href{https://www.youtube.com/watch?v=hCnGoKwcAhQ}{ run}
     \end{itemize}
 \end{frame}
 
@@ -331,16 +273,6 @@ the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang J
 \end{frame}
 
 
-
-\begin{frame}{Further improvement: high score buffer replay}
-    \begin{itemize}
-        \item The learning curve is like:\\\vspace{0.2cm}
-        \begin{center}\includegraphics[width=.7\textwidth]{no_buffer}\end{center}
-    \end{itemize}  
-\end{frame}
-
-
-
 \begin{frame}{Further improvement: high score buffer replay}
     \begin{itemize}
         \item A Typical training curve in Reinforcement Learning\\\vspace{0.2cm}
@@ -350,6 +282,15 @@ the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang J
         \item Use importance sampling to learn from high score buffer from time to time\\\vspace{0.2cm}
     \end{itemize}  
 \end{frame}
+
+\begin{frame}{Further improvement: high score buffer replay}
+    \begin{itemize}
+        \item The learning curve is like:\\\vspace{0.2cm}
+        \begin{center}\includegraphics[width=.3\textwidth]{PPO_vanilla1}\includegraphics[width=.3\textwidth]{PPO_best_buffer_1}\end{center}
+    \end{itemize}  
+\end{frame}
+
+
 
 \begin{frame}{Reference}
     $\bullet$\hspace{0.2cm}\textit{Williams, Ronald J. Simple statistical gradient-following algorithms for connectionist reinforcement learning. Machine learning, 8(3-4):229-256, 1992.}\\\vspace{0.2cm}

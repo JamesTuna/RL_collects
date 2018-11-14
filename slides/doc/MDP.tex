@@ -133,6 +133,8 @@
 \begin{frame}{Q-learning and SARSA}
     \begin{itemize}
         \item Q-learning result:\\
+        \begin{center}Reward of episodes of experiment on Maze game \includegraphics[width=0.6\textwidth]{q_learning_result}\end{center}
+
     \end{itemize}
 \end{frame}
 
@@ -171,26 +173,32 @@
          \bigskip
          \item Steps:\\
          \bigskip
-         \hspace{0.5cm}$\romannumeral1$ store transition$(s_{t},s_{t},r_{t+1},s_{t+1})$ in memory\\
-         \hspace{0.5cm}$\romannumeral2$ sample mini-batch of transitions, optimise MSE between Q-network and \\
+         \hspace{0.5cm}$\bullet$ store transition$(s_{t},s_{t},r_{t+1},s_{t+1})$ in memory\\
+         \hspace{0.5cm}$\bullet$ sample mini-batch of transitions, optimise MSE between Q-network and \\
          \hspace{0.7cm} Q-learning targets:\\
          \begin{equation}
             \text{minimize  }  L_{w}=E_{s,a,r,s'}[(r+\gamma \max\limits_{a'}Q(s',a';w^{-})-Q(s,a;w))^2]
         \end{equation}
-        \hspace{0.5cm}$\romannumeral3$ 
+        \hspace{0.5cm}$\bullet$ Important tricks: experience replay and fixed target
 
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Value Iteration: Problem}
+
+\begin{frame}{Deep Q-Networks(DQN): play games in OpenAI gym}
+    %{{{
+    \begin{center}\includegraphics[width=.4\textwidth]{pole}\end{center}
     \begin{itemize}
-        \item Recall: greedy action selection\\
-        \begin{equation}
-            \pi(s)=\arg\max\limits_{a' \in A}Q(s_{t+1},a')
-        \end{equation}   
-        \item Problem: deterministic, strategy fixed, not practical in Partially-Observed environment
+        \item States are represented by 4-element tuples (position,cart velocity,angle,tip velocity)
+        \item Actions can be either moving left or right
+        \item Function approximator is a feed foward neural network 
+        \item 1 hidden layer with 10 neurons, 2 output neurons representing value estimation for two actions
+        \item Implemented using torch and tensorflow, can stay alive for 1 minute
     \end{itemize}
+
 \end{frame}
+
+
 
 
 
