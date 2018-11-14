@@ -290,6 +290,20 @@
 \end{equation}
 \end{frame}
 
+\begin{frame}{Further improvement: clipped objective function}
+    \begin{itemize}
+
+        \item Why $\hat{E_t}[\frac{\pi_\theta(a_t,s_t)}{\pi_{\theta_{old}}(a_t,s_t)}\hat{A}_{t}]$ in equation \ref{objPPO}?\\\vspace{0.2cm}
+        \item Well justified in \href{https://arxiv.org/pdf/1502.05477.pdf}{"Trust Region Policy Optimization"}\textcolor{CUHKgreen}{\footnotesize[Schulman, John et al.]}\\\vspace{0.2cm}
+        \item My understanding: a case of importance sampling\\\vspace{0.2cm}
+        \item Importance sampling: adjusted rewards, learn from different policy\\\vspace{0.2cm}
+        \item Trajectories generated from $\pi_{old}$ are learned multiple times to update a different policy $\pi$, through importance sampling\\\vspace{0.2cm}
+        \item More on importance sampling: \href{http://rll.berkeley.edu/~jietang/pubs/nips10_Tang.pdf}{On a Connection between Importance Sampling and
+the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang Jie and Pieter Abbeel.]}
+    \end{itemize}
+
+\end{frame}
+
 \begin{frame}{Proximal Policy Optimization(PPO)}
     \vspace{0.15cm}
     The algorithm is known as \href{https://arxiv.org/pdf/1707.06347.pdf}{Proximal Policy Optimization} \textcolor{CUHKgreen}{\footnotesize[Schulman, John et al.]}\\\vspace{0.15cm}
@@ -335,5 +349,18 @@
         \item Idea comes naturally: store those trajectories with high score in a buffer\\\vspace{0.2cm}
         \item Use importance sampling to learn from high score buffer from time to time\\\vspace{0.2cm}
     \end{itemize}  
+\end{frame}
+
+\begin{frame}{Reference}
+    $\bullet$\hspace{0.2cm}\textit{Williams, Ronald J. Simple statistical gradient-following algorithms for connectionist reinforcement learning. Machine learning, 8(3-4):229-256, 1992.}\\\vspace{0.2cm}
+
+    $\bullet$\hspace{0.2cm}\textit{Schulman, J., Levine, S., Moritz, P., Jordan, M.I., \& Abbeel, P. (2015). Trust Region Policy Optimization. ICML.}\\\vspace{0.2cm}
+
+    $\bullet$\hspace{0.2cm}\textit{Tang, J., \& Abbeel, P. (2010). On a Connection between Importance Sampling and the Likelihood Ratio Policy Gradient. NIPS.}\\\vspace{0.2cm}
+    
+    $\bullet$\hspace{0.2cm}\textit{Schulman, J., Wolski, F., Dhariwal, P., Radford, A., \& Klimov, O. (2017). Proximal Policy Optimization Algorithms. CoRR, abs/1707.06347.}\\\vspace{0.2cm}
+    
+    \begin{center}Github link for the whole project: \href{https://github.com/JamesTuna/RL_collects}{https://github.com/JamesTuna/RL\_collects}\end{center}
+
 \end{frame}
 
