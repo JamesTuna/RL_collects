@@ -1,8 +1,8 @@
 \graphicspath{{./figs/repo/}{./figs/}}
 \section{Policy based Reinforcement Learning}
 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \begin{frame}{Policy based method}
     Value based method (previous sildes):
     \begin{itemize}
@@ -18,6 +18,8 @@
         \item Return stochastic policy
     \end{itemize}
 \end{frame}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Policy based method}
     What's wrong with value based methods?\\\vspace{0.2cm}
@@ -102,16 +104,21 @@
     \end{itemize}
 \end{frame}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \begin{frame}{Vanilla Policy Gradient: \textbf{REINFORCE}}
     So far, we obtain the first policy gradient algotithm called \href{http://www-anw.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf}{\textbf{REINFORCE}} \textcolor{CUHKgreen}{\footnotesize[Williams, R. J.]}
     \begin{center}\includegraphics[width=.9\textwidth]{REINFORCE}\end{center}
 \end{frame}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Vanilla Policy Gradient: \textbf{REINFORCE}}
     \vspace{0.2cm}
+    So far, we obtain the first policy gradient algotithm called \href{http://www-anw.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf}{\textbf{REINFORCE}} \textcolor{CUHKgreen}{\footnotesize[Williams, R. J.]}
     \begin{center}Experiment on CartPole game:\\Bad performance, worse than random play after 1000 episodes of training\\\href{https://www.youtube.com/watch?v=1bvTOM7Az3s}{\includegraphics[width=.7\textwidth]{REINFORCE1}}\end{center}
 \end{frame}
+
 
 \begin{frame}{Improvement for \textbf{REINFORCE}: baseline}
     \begin{itemize}
@@ -188,12 +195,15 @@
         \item Policy updates without delay!
     \end{itemize}
 \end{frame}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \begin{frame}{Actor-Critic: algorithm}
     \vspace{0.2cm}
     Now there are two function to learn: policy function $\pi_{\theta}$ is known as actor and value estimator $\hat{V_{\varphi}}$ is known as critic, hence the model named \textbf{Actor-Critic}.
     \begin{center}\includegraphics[width=.8\textwidth]{AC1}\end{center}
 \end{frame}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Further improvement: clipped objective function}
     \begin{itemize}
@@ -245,12 +255,15 @@ the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang J
     \end{itemize}
 
 \end{frame}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \begin{frame}{Proximal Policy Optimization(PPO)}
     \vspace{0.15cm}
     The algorithm is known as \href{https://arxiv.org/pdf/1707.06347.pdf}{Proximal Policy Optimization} \textcolor{CUHKgreen}{\footnotesize[Schulman, John et al.]}\\\vspace{0.15cm}
     \includegraphics[width=.8\textwidth]{PPO1}
 \end{frame}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Proximal Policy Optimization(PPO): some demo}
     \vspace{0.15cm}
@@ -272,7 +285,8 @@ the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang J
     \end{itemize}
 \end{frame}
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \begin{frame}{Further improvement: high score buffer replay}
     \begin{itemize}
         \item A Typical training curve in Reinforcement Learning\\\vspace{0.2cm}
@@ -282,11 +296,13 @@ the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang J
         \item Use importance sampling to learn from high score buffer from time to time\\\vspace{0.2cm}
     \end{itemize}  
 \end{frame}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Further improvement: high score buffer replay}
     \begin{itemize}
         \item The learning curve is like:\\\vspace{0.2cm}
-        \begin{center}\includegraphics[width=.3\textwidth]{PPO_vanilla1}\includegraphics[width=.3\textwidth]{PPO_best_buffer_1}\end{center}
+        \begin{center}\includegraphics[width=.5\textwidth]{PPO_vanilla1}\includegraphics[width=.5\textwidth]{PPO_best_buffer_1}\end{center}
     \end{itemize}  
 \end{frame}
 
