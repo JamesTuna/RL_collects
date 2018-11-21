@@ -87,7 +87,7 @@
             \end{equation}
         \item Bellman equation: A recursive relation for value function:
             \begin{equation}
-                V^*(s)=\max\limits_{a\in A} E [r_{t+1}+V^*_{s_{t+1}}|s_{t}=s,a_{t}=t]
+                V^*(s)=\max\limits_{a\in A} E [r_{t+1}+V^*_{s_{t+1}}|s_{t}=s,a_{t}=a]
             \end{equation}
         \item $(TV)(s)$ is the Bellman operator and we can recursively calculate it and update $V(s)$ (value iteration) to reach optimal (Monotonicity and Contraction mapping)
             \begin{equation}
