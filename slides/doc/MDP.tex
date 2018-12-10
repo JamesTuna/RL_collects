@@ -40,7 +40,7 @@
 \begin{frame}{Markov Decision Process}
     \begin{itemize}
         
-        \item The MDP gives us a precise formulation of the environment, given a state st we select an action at and observe $s_{t+1}$ and $r_{t}$ according to the transition probabilities P:\\
+        \item The MDP gives us a precise formulation of the environment, given a state st we select an action $a_{t}$ and observe $s_{t+1}$ and $r_{t}$ according to the transition probabilities P:\\
         \bigskip
         \hspace{0.5cm}$\bullet$  $S$ - set of possible states \\
         \hspace{0.5cm}$\bullet$  $s_{t}\in S$ - state at step $t$ \\
@@ -87,7 +87,7 @@
             \end{equation}
         \item Bellman equation: A recursive relation for value function:
             \begin{equation}
-                V^*(s)=\max\limits_{a\in A} E [r_{t+1}+V^*_{s_{t+1}}|s_{t}=s,a_{t}=a]
+                V^*(s)=\max\limits_{a\in A} E [r_{t+1}+V^*(s_{t+1})|s_{t}=s,a_{t}=a]
             \end{equation}
         \item $(TV)(s)$ is the Bellman operator and we can recursively calculate it and update $V(s)$ (value iteration) to reach optimal (Monotonicity and Contraction mapping)
             \begin{equation}
@@ -118,7 +118,7 @@
         
         \item Greedy action selection is simple:
         \begin{equation}
-        \pi(s)=\arg\max\limits_{a' \in A}Q(s_{t+1},a')
+        \pi(s)=\arg\max\limits_{a \in A}Q(s_{t},a)
         \end{equation}
     \end{itemize}
 \end{frame}
@@ -208,7 +208,7 @@
          \bigskip
          \item Steps:\\
          \bigskip
-         \hspace{0.5cm}$\bullet$ store transition$(s_{t},s_{t},r_{t+1},s_{t+1})$ in memory\\
+         \hspace{0.5cm}$\bullet$ store transition$(s_{t},a_{t},r_{t+1},s_{t+1})$ in memory\\
          \hspace{0.5cm}$\bullet$ sample mini-batch of transitions, optimise MSE between Q-network and \\
          \hspace{0.7cm} Q-learning targets:\\
          \begin{equation}
