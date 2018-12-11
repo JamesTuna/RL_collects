@@ -86,7 +86,7 @@
         \begin{equation}
             \label{PG4}
             \begin{split}
-                \nabla_\theta E_{\pi_{\theta}}[R(\tau)] = E_{\pi_{\theta}}[R(\tau)\nabla_\theta\sum\limits_{s_i,a_i \in \tau}\ln\pi_\theta(a_i,s_i)]
+                \nabla_\theta E_{\pi_{\theta}}[R(\tau)] = E_{\pi_{\theta}}[R(\tau)\sum\limits_{s_i,a_i \in \tau}\frac{\nabla_\theta\pi_\theta(a_i,s_i)}{\pi_\theta(a_i,s_i)}]
             \end{split}
         \end{equation}
     Intuition from equation \ref{PG4}, adjustment magnitude of policy on $\pi_{\theta}(a,s)$:\vspace{0.2cm}
@@ -265,6 +265,15 @@ the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang J
 \fi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+\begin{frame}{Further improvement: high score buffer replay}
+    \begin{itemize}
+        \item The learning curve is like:\\
+        \begin{flushleft}\includegraphics[width=.5\textwidth]{PPO_vanilla1}\includegraphics[width=.5\textwidth]{PPO_best_buffer_1}\end{flushleft}
+    \end{itemize}  
+\end{frame}
+
+
 \begin{frame}{Proximal Policy Optimization(PPO): some demo}
     \vspace{0.15cm}
     Test on \href{https://gym.openai.com/}{OpenAI gym} Agents implemented and trained using \href{https://en.wikipedia.org/wiki/PyTorch}{Pytorch}\\\vspace{0.15cm}
@@ -299,12 +308,7 @@ the Likelihood Ratio Policy Gradient} \textcolor{CUHKgreen}{\footnotesize[Tang J
 \fi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% deleted %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Further improvement: high score buffer replay}
-    \begin{itemize}
-        \item The learning curve is like:\\
-        \begin{flushleft}\includegraphics[width=.5\textwidth]{PPO_vanilla1}\includegraphics[width=.5\textwidth]{PPO_best_buffer_1}\end{flushleft}
-    \end{itemize}  
-\end{frame}
+
 
 
 
